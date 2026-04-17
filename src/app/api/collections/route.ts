@@ -8,6 +8,17 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const publicOnly = searchParams.get('publicOnly') === 'true';
+        // ✅ 新增：检查是否登录
+    const session = await getServerSession(authOptions);
+    const isAdmin = !!session;
+
+    // ✅ 修改 where 条件：登录就查所有，未登录才按参数过滤
+    const collections = await prisma.collection.findMany({
+      where: isAdmin ? {} : (publicOnly ? { isPublic: true } : { isPublic: true }),
+      orderBy: {
+        sortOrder: "asc"
+      }
+    });
     
     // Retrieve collections list, optionally filtering for public collections
     const collections = await prisma.collection.findMany({
