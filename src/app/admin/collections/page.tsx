@@ -35,7 +35,7 @@ export default function CollectionsPage() {
           <>
             <Button
               onClick={() => setIsCreateDialogOpen(true)}
-              disabled={hasCollections}
+              disabled={false}
             >
               <Plus className="w-4 h-4 mr-2" />
               New Collection
@@ -43,7 +43,7 @@ export default function CollectionsPage() {
             <Button
               variant="outline"
               onClick={() => setIsImportDialogOpen(true)}
-              disabled={hasCollections}
+              disabled={false}
             >
               <Upload className="w-4 h-4 mr-2" />
               Import
