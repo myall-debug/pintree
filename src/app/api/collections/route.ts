@@ -81,20 +81,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // 检查是否已经存在任何集合
-    const existingCollections = await prisma.collection.findMany({
-      take: 1,
-    });
-
-    if (existingCollections.length > 0) {
-      return NextResponse.json(
-        {
-          error:
-            "A collection already exists. Cannot create another collection.",
-        },
-        { status: 403 }
-      );
-    }
+// // 检查是否已经存在任何集合
+// const existingCollections = await prisma.collection.findMany({
+//   take: 1,
+// });
+// 
+// if (existingCollections.length > 0) {
+//   return NextResponse.json(
+//     {
+//       error:
+//         "A collection already exists. Cannot create another collection.",
+//     },
+//     { status: 403 }
+//   );
+// }
 
     const body = await request.json();
     const { name, description, icon, isPublic, viewStyle, sortStyle, sortOrder } = body;
