@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";  // ✅ 新增这一行
 import { useState, useEffect, useCallback, Suspense } from "react";
 import {  useSearchParams, useRouter, usePathname } from "next/navigation";
 import { WebsiteSidebar } from "@/components/website/sidebar";
@@ -16,6 +17,7 @@ import { BackToTop } from "@/components/website/back-to-top";
 import { Collection } from "@prisma/client";
 
 function SearchParamsComponent() {
+  const { data: session } = useSession();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const collectionSlug = searchParams.get("collection");
@@ -42,7 +44,8 @@ function SearchParamsComponent() {
     const fetchCollectionsAndSetDefault = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/collections?publicOnly=true");
+        const publicOnlyParam = session ? "" : "?publicOnly=true";
+        const response = await fetch(`/api/collections${publicOnlyParam}`);
         const data = await response.json();
         setCollections(data);
 
