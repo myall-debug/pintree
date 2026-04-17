@@ -19,16 +19,6 @@ export async function GET(request: Request) {
         sortOrder: "asc"
       }
     });
-    
-    // Retrieve collections list, optionally filtering for public collections
-    const collections = await prisma.collection.findMany({
-      where: publicOnly ? {
-        isPublic: true
-      } : undefined,
-      orderBy: {
-        sortOrder: "asc"
-      }
-    });
 
     // Return data structure:
     // An array of collection objects with the following properties:
