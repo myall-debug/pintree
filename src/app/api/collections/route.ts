@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // ✅ 处理导入逻辑：如果 body 里有 bookmarks 数组
+    // ✅ 处理导入逻辑
     if (body.bookmarks && Array.isArray(body.bookmarks)) {
       const collectionName = body.name || "Imported Collection";
 
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
 
       if (!collection) {
         collection = await prisma.collection.create({
-          data: { // ✅ 修复：这里补上了 data:
+          data: {
             name: collectionName,
             slug: collectionName.toLowerCase().replace(/\s+/g, '-'),
             description: "",
@@ -108,21 +108,18 @@ export async function POST(request: Request) {
         });
       }
 
-      // 2. 准备书签数据
+      // 2. 准备书签数据（只保留最核心字段，避免字段不匹配）
       const bookmarksToCreate = body.bookmarks.map((b: any) => ({
         title: b.title || b.name || "Untitled",
         url: b.url,
-        description: b.description || "",
-        icon: b.icon || "",
+        // 只保留这两个必填字段，其他可选字段先不加
         collectionId: collection.id,
-        folderId: null,
       }));
 
-      // 3. 批量插入
+      // 3. 批量插入（去掉 skipDuplicates，避免唯一约束问题）
       if (bookmarksToCreate.length > 0) {
         await prisma.bookmark.createMany({
-          data: bookmarksToCreate, // ✅ 修复：这里补上了 data:
-          skipDuplicates: true
+          data: bookmarksToCreate
         });
       }
 
@@ -152,7 +149,7 @@ export async function POST(request: Request) {
     }
 
     const collection = await prisma.collection.create({
-      data: { // ✅ 修复：这里补上了 data:
+      data: {
         name: name || "",
         description: description || "",
         icon: icon || "",
@@ -167,12 +164,6 @@ export async function POST(request: Request) {
     return NextResponse.json(collection);
   } catch (error: unknown) {
     console.error("Detailed error:", error);
-    if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
-      return NextResponse.json(
-        { error: "Name or slug already in use" },
-        { status: 400 }
-      );
-    }
     return NextResponse.json(
       { error: `Failed to process request: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
