@@ -95,7 +95,7 @@ export async function POST(request: Request) {
 
       if (!collection) {
         collection = await prisma.collection.create({
-          data: { // ✅ 修复：加上 data:
+          data: { // ✅ 修复：这里补上了 data:
             name: collectionName,
             slug: collectionName.toLowerCase().replace(/\s+/g, '-'),
             description: "",
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
       // 3. 批量插入
       if (bookmarksToCreate.length > 0) {
         await prisma.bookmark.createMany({
-          data: bookmarksToCreate, // ✅ 修复：加上 data:
+          data: bookmarksToCreate, // ✅ 修复：这里补上了 data:
           skipDuplicates: true
         });
       }
@@ -152,7 +152,7 @@ export async function POST(request: Request) {
     }
 
     const collection = await prisma.collection.create({
-      data: { // ✅ 修复：加上 data:
+      data: { // ✅ 修复：这里补上了 data:
         name: name || "",
         description: description || "",
         icon: icon || "",
