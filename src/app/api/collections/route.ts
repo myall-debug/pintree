@@ -82,6 +82,100 @@ export async function POST(request: Request) {
       );
     }
 
+    const body = await request.json();
+
+    // ✅ 新增：处理导入逻辑
+    // 如果 body 里有 bookmarks 数组，说明是导入请求
+    if (body.bookmarks && Array.isArray(body.bookmarks)) {
+      const collectionName = body.name || "Imported Collection";
+
+      // 1. 查找是否已有该名字的集合，没有则创建一个
+      let collection = await prisma.collection.findFirst({
+        where: { name: collectionName }
+      });
+
+      if (!collection) {
+        collection = await prisma.collection.create({
+          data: {
+            name: collectionName,
+            slug: collectionName.toLowerCase().replace(/\s+/g, '-'),
+            description: "",
+            icon: "",
+            isPublic: true, // 默认公开
+            viewStyle: "list",
+            sortStyle: "alpha",
+            sortOrder: 0
+          },
+        });
+      }
+
+      // 2. 准备要插入的书签数据
+      const bookmarksToCreate = body.bookmarks.map((b: any) => ({
+        title: b.title || b.name || "Untitled", // 兼容不同字段名
+        url: b.url,
+        description: b.description || "",
+        icon: b.icon || "",
+        collectionId: collection.id,
+        folderId: null, // 默认都在根目录
+      }));
+
+      // 3. 批量插入数据库 (跳过重复的 URL)
+      // 注意：如果书签非常多（几千个），建议分批插入
+      await prisma.bookmark.createMany({
+        data: bookmarksToCreate,
+        skipDuplicates: true 
+      });
+
+      return NextResponse.json({ 
+        success: true, 
+        message: `Successfully imported ${bookmarksToCreate.length} bookmarks` 
+      });
+    }
+
+    // ✅ 原有：处理创建新集合的逻辑
+    const { name, description, icon, isPublic, viewStyle, sortStyle, sortOrder } = body;
+    const slug = name ? name.toLowerCase().replace(/\s+/g, '-') : "";
+
+    // 检查名称是否已存在
+    if (name) {
+      const existingCollection = await prisma.collection.findFirst({
+        where: {
+          OR: [{ name }, { slug }]
+        }
+      });
+
+      if (existingCollection) {
+        return NextResponse.json(
+          { error: "The name or slug is already in use" },
+          { status: 400 }
+        );
+      }
+    }
+
+    // 创建新集合
+    const collection = await prisma.collection.create({
+      data: {
+        name: name || "",
+        description: description || "",
+        icon: icon || "",
+        isPublic: isPublic ?? true,
+        viewStyle: viewStyle || "list",
+        sortStyle: sortStyle || "alpha",
+        sortOrder: sortOrder ?? 0,
+        slug,
+      },
+    });
+
+    return NextResponse.json(collection);
+  } catch (error: unknown) {
+    console.error("Detailed error:", error);
+    return NextResponse.json(
+      { error: `Failed to process request: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { status: 500 }
+    );
+  }
+}
+
 // // 检查是否已经存在任何集合
 // const existingCollections = await prisma.collection.findMany({
 //   take: 1,
