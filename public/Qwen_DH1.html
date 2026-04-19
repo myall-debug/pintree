@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nostraforma 品牌官网导航</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --accent: #3498db;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #e0e0e0;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border-radius: var(--radius);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+
+    /* 搜索框 */
+    .search-box {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 20px 14px 45px;
+      border: 2px solid var(--border);
+      border-radius: 50px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: var(--card-bg);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .search-box::before {
+      content: "🔍";
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+    }
+
+    /* 分类标签 */
+    .categories {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .category-btn {
+      padding: 8px 20px;
+      border: 2px solid var(--accent);
+      background: white;
+      color: var(--accent);
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .category-btn.active,
+    .category-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* 品牌网格 */
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .brand-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .brand-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    .brand-icon {
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 4px;
+    }
+
+    .brand-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+      color: var(--primary);
+    }
+
+    .brand-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: block;
+      margin-bottom: 6px;
+      word-break: break-all;
+      transition: color 0.2s;
+    }
+
+    .brand-link:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
+
+    .brand-note {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      background: #f1f5f9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .brand-note.unconfirmed {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    /* 分类标题 */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 35px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+      color: var(--primary);
+    }
+
+    .section-title.top { border-color: #e74c3c; color: #c0392b; }
+    .section-title.recommended { border-color: #3498db; color: #2980b9; }
+    .section-title.other { border-color: #95a5a6; color: #7f8c8d; }
+
+    .section-title::before {
+      content: "";
+      width: 6px;
+      height: 24px;
+      border-radius: 3px;
+      background: currentColor;
+    }
+
+    /* 页脚 */
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .brands-grid {
+        grid-template-columns: 1fr;
+      }
+      header h1 {
+        font-size: 1.6rem;
+      }
+      .brand-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      .brand-info {
+        width: 100%;
+      }
+    }
+
+    /* 动画 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .brand-card {
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .brand-card:nth-child(1) { animation-delay: 0.05s; }
+    .brand-card:nth-child(2) { animation-delay: 0.1s; }
+    .brand-card:nth-child(3) { animation-delay: 0.15s; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>💡 Nostraforma 品牌官网导航</h1>
+      <p>精选85+欧洲高端照明设计品牌 · 一键直达官方网站</p>
+    </header>
+
+    <!-- 搜索框 -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="搜索品牌名称或备注..." onkeyup="filterBrands()">
+    </div>
+
+    <!-- 分类按钮 -->
+    <div class="categories">
+      <button class="category-btn active" onclick="filterCategory('all')">全部</button>
+      <button class="category-btn" onclick="filterCategory('top')">🏆 Top Brands</button>
+      <button class="category-btn" onclick="filterCategory('recommended')">⭐ Recommended</button>
+      <button class="category-btn" onclick="filterCategory('other')">📦 Other Brands</button>
+    </div>
+
+    <!-- 🏆 Top Brands -->
+    <h2 class="section-title top">🏆 Top Brands（顶级品牌）</h2>
+    <div class="brands-grid" id="top-brands">
+      <div class="brand-card" data-category="top" data-name="artemide">
+        <a href="https://www.artemide.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=artemide.com&sz=128" alt="Artemide" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%233498db%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EA%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Artemide</div>
+          <a href="https://www.artemide.com/" target="_blank" class="brand-link">www.artemide.com</a>
+          <span class="brand-note">意大利照明设计品牌</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="bover">
+        <a href="https://www.bover.es/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=bover.es&sz=128" alt="Bover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e74c3c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EB%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Bover</div>
+          <a href="https://www.bover.es/" target="_blank" class="brand-link">www.bover.es</a>
+          <span class="brand-note">西班牙手工照明品牌</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="catellani">
+        <a href="https://www.catellanismith.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=catellanismith.com&sz=128" alt="Catellani & Smith" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232ecc71%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EC%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Catellani & Smith</div>
+          <a href="https://www.catellanismith.com/" target="_blank" class="brand-link">www.catellanismith.com</a>
+          <span class="brand-note">意大利手工灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="flos">
+        <a href="https://flos.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=flos.com&sz=128" alt="Flos" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23f39c12%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EF%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Flos</div>
+          <a href="https://flos.com/" target="_blank" class="brand-link">flos.com</a>
+          <span class="brand-note">意大利高端照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="foscarini">
+        <a href="https://www.foscarini.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=foscarini.com&sz=128" alt="Foscarini" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%239b59b6%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EF%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Foscarini</div>
+          <a href="https://www.foscarini.com/" target="_blank" class="brand-link">www.foscarini.com</a>
+          <span class="brand-note">威尼斯穆拉诺玻璃灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="ingo">
+        <a href="https://www.ingo-maurer.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=ingo-maurer.com&sz=128" alt="Ingo Maurer" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%231abc9c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EI%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Ingo Maurer</div>
+          <a href="https://www.ingo-maurer.com/" target="_blank" class="brand-link">www.ingo-maurer.com</a>
+          <span class="brand-note">德国诗意灯光设计</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="louis">
+        <a href="https://www.louispoulsen.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=louispoulsen.com&sz=128" alt="Louis Poulsen" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%2334495e%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EL%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Louis Poulsen</div>
+          <a href="https://www.louispoulsen.com/" target="_blank" class="brand-link">www.louispoulsen.com</a>
+          <span class="brand-note">丹麦1874年经典照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="luceplan">
+        <a href="https://www.luceplan.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=luceplan.com&sz=128" alt="Luceplan" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e67e22%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EL%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Luceplan</div>
+          <a href="https://www.luceplan.com/" target="_blank" class="brand-link">www.luceplan.com</a>
+          <span class="brand-note">意大利创新照明系统</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="marset">
+        <a href="https://www.marset.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=marset.com&sz=128" alt="Marset" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%233498db%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EM%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Marset</div>
+          <a href="https://www.marset.com/" target="_blank" class="brand-link">www.marset.com</a>
+          <span class="brand-note">西班牙1943年照明品牌</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="mawa">
+        <a href="https://www.mawa-design.de/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=mawa-design.de&sz=128" alt="Mawa Design" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e74c3c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EM%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Mawa Design</div>
+          <a href="https://www.mawa-design.de/" target="_blank" class="brand-link">www.mawa-design.de</a>
+          <span class="brand-note">德国简约照明设计</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="santa">
+        <a href="https://www.santacole.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=santacole.com&sz=128" alt="Santa & Cole" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232ecc71%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ES%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Santa & Cole</div>
+          <a href="https://www.santacole.com/" target="_blank" class="brand-link">www.santacole.com</a>
+          <span class="brand-note">西班牙巴塞罗那设计出版</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="top" data-name="vibia">
+        <a href="https://vibia.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=vibia.com&sz=128" alt="Vibia" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23f39c12%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EV%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Vibia</div>
+          <a href="https://vibia.com/" target="_blank" class="brand-link">vibia.com</a>
+          <span class="brand-note">西班牙巴塞罗那照明品牌</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⭐ Recommended Brands -->
+    <h2 class="section-title recommended">⭐ Recommended Brands（推荐品牌）</h2>
+    <div class="brands-grid" id="recommended-brands">
+      <div class="brand-card" data-category="recommended" data-name="astep">
+        <a href="https://astep.design/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=astep.design&sz=128" alt="Astep" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%239b59b6%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EA%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Astep</div>
+          <a href="https://astep.design/" target="_blank" class="brand-link">astep.design</a>
+          <span class="brand-note">丹麦设计·意大利制造</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="baltensweiler">
+        <a href="https://www.baltensweiler.ch/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=baltensweiler.ch&sz=128" alt="Baltensweiler" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%231abc9c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EB%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Baltensweiler</div>
+          <a href="https://www.baltensweiler.ch/" target="_blank" class="brand-link">www.baltensweiler.ch</a>
+          <span class="brand-note">瑞士1951年高端灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="belux">
+        <a href="https://www.belux.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=belux.com&sz=128" alt="Belux" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%2334495e%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EB%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Belux</div>
+          <a href="https://www.belux.com/" target="_blank" class="brand-link">www.belux.com</a>
+          <span class="brand-note">瑞士1970年建筑照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="bocci">
+        <a href="https://bocci.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=bocci.com&sz=128" alt="Bocci" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e67e22%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EB%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Bocci</div>
+          <a href="https://bocci.com/" target="_blank" class="brand-link">bocci.com</a>
+          <span class="brand-note">加拿大雕塑感照明设计</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="bruck">
+        <a href="https://bruck.de/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=bruck.de&sz=128" alt="Bruck" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%233498db%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EB%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Bruck</div>
+          <a href="https://bruck.de/" target="_blank" class="brand-link">bruck.de</a>
+          <span class="brand-note">德国高端轨道照明系统</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="dcw">
+        <a href="https://dcw-editions.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=dcw-editions.com&sz=128" alt="DCW éditions" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e74c3c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ED%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">DCW éditions</div>
+          <a href="https://dcw-editions.com/" target="_blank" class="brand-link">dcw-editions.com</a>
+          <span class="brand-note">法国巴黎设计照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="escale">
+        <a href="https://www.escale.de/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=escale.de&sz=128" alt="Escale" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232ecc71%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EE%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Escale</div>
+          <a href="https://www.escale.de/" target="_blank" class="brand-link">www.escale.de</a>
+          <span class="brand-note">德国林巴赫手工灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="fabbian">
+        <a href="https://www.fabbian.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=fabbian.com&sz=128" alt="Fabbian" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23f39c12%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EF%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Fabbian</div>
+          <a href="https://www.fabbian.com/" target="_blank" class="brand-link">www.fabbian.com</a>
+          <span class="brand-note">意大利1961年照明制造</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="fritz">
+        <a href="https://www.fritzhansen.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=fritzhansen.com&sz=128" alt="Fritz Hansen" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%239b59b6%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EF%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Fritz Hansen</div>
+          <a href="https://www.fritzhansen.com/" target="_blank" class="brand-link">www.fritzhansen.com</a>
+          <span class="brand-note">丹麦1872年家具照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="grau">
+        <a href="https://www.grau.art/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=grau.art&sz=128" alt="GRAU" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%231abc9c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EG%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">GRAU</div>
+          <a href="https://www.grau.art/" target="_blank" class="brand-link">www.grau.art</a>
+          <span class="brand-note">德国智能健康照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="holt">
+        <a href="https://www.holtkoetter.de/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=holtkoetter.de&sz=128" alt="Holtkötter" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%2334495e%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EH%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Holtkötter</div>
+          <a href="https://www.holtkoetter.de/" target="_blank" class="brand-link">www.holtkoetter.de</a>
+          <span class="brand-note">德国1964年手工灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="ip44">
+        <a href="https://ip44.de/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=ip44.de&sz=128" alt="IP44.de" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e67e22%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EI%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">IP44.de</div>
+          <a href="https://ip44.de/" target="_blank" class="brand-link">ip44.de</a>
+          <span class="brand-note">德国户外专业照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="kdln">
+        <a href="https://kdln.it/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=kdln.it&sz=128" alt="KDLN" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%233498db%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EK%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">KDLN</div>
+          <a href="https://kdln.it/" target="_blank" class="brand-link">kdln.it</a>
+          <span class="brand-note">意大利米兰1996年设计照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="leklint">
+        <a href="https://www.leklint.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=leklint.com&sz=128" alt="Le Klint" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e74c3c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EL%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Le Klint</div>
+          <a href="https://www.leklint.com/" target="_blank" class="brand-link">www.leklint.com</a>
+          <span class="brand-note">丹麦1943年手工折叠灯罩</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="lodes">
+        <a href="https://www.lodes.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=lodes.com&sz=128" alt="Lodes" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232ecc71%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EL%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Lodes</div>
+          <a href="https://www.lodes.com/" target="_blank" class="brand-link">www.lodes.com</a>
+          <span class="brand-note">意大利威尼斯1950年玻璃灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="lumina">
+        <a href="https://www.lumina.it/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=lumina.it&sz=128" alt="Lumina" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23f39c12%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EL%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Lumina</div>
+          <a href="https://www.lumina.it/" target="_blank" class="brand-link">www.lumina.it</a>
+          <span class="brand-note">意大利40年设计照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="madebyhand">
+        <a href="https://madebyhand.dk/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=madebyhand.dk&sz=128" alt="Made By Hand" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%239b59b6%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EM%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Made By Hand</div>
+          <a href="https://madebyhand.dk/" target="_blank" class="brand-link">madebyhand.dk</a>
+          <span class="brand-note">丹麦2014年手工设计品牌</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="moooi">
+        <a href="https://www.moooi.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=moooi.com&sz=128" alt="Moooi" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%231abc9c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EM%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Moooi</div>
+          <a href="https://www.moooi.com/" target="_blank" class="brand-link">www.moooi.com</a>
+          <span class="brand-note">荷兰2001年创新设计</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="nemo">
+        <a href="https://www.nemolighting.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=nemolighting.com&sz=128" alt="Nemo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%2334495e%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EN%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Nemo</div>
+          <a href="https://www.nemolighting.com/" target="_blank" class="brand-link">www.nemolighting.com</a>
+          <span class="brand-note">意大利1993年照明集团</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="northern">
+        <a href="https://northernlighting.no/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=northernlighting.no&sz=128" alt="Northern" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e67e22%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EN%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Northern</div>
+          <a href="https://northernlighting.no/" target="_blank" class="brand-link">northernlighting.no</a>
+          <span class="brand-note">挪威2005年北欧设计照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="oligo">
+        <a href="https://www.oligo.de/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=oligo.de&sz=128" alt="Oligo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%233498db%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EO%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Oligo</div>
+          <a href="https://www.oligo.de/" target="_blank" class="brand-link">www.oligo.de</a>
+          <span class="brand-note">德国1987年智能照明系统</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="oluce">
+        <a href="https://www.oluce.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=oluce.com&sz=128" alt="Oluce" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e74c3c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EO%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Oluce</div>
+          <a href="https://www.oluce.com/" target="_blank" class="brand-link">www.oluce.com</a>
+          <span class="brand-note">意大利1945年最古老照明设计</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="panzeri">
+        <a href="https://panzeri.it/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=panzeri.it&sz=128" alt="Panzeri" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232ecc71%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EP%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Panzeri</div>
+          <a href="https://panzeri.it/" target="_blank" class="brand-link">panzeri.it</a>
+          <span class="brand-note">意大利1947年手工灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="ribag">
+        <a href="https://www.ribag.ch/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=ribag.ch&sz=128" alt="Ribag" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23f39c12%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ER%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Ribag</div>
+          <a href="https://www.ribag.ch/" target="_blank" class="brand-link">www.ribag.ch</a>
+          <span class="brand-note">瑞士高端建筑照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="secto">
+        <a href="https://www.sectodesign.fi/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=sectodesign.fi&sz=128" alt="Secto Design" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%239b59b6%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ES%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Secto Design</div>
+          <a href="https://www.sectodesign.fi/" target="_blank" class="brand-link">www.sectodesign.fi</a>
+          <span class="brand-note">芬兰手工木制灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="serien">
+        <a href="https://serien.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=serien.com&sz=128" alt="Serien Lighting" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%231abc9c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ES%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Serien Lighting</div>
+          <a href="https://serien.com/" target="_blank" class="brand-link">serien.com</a>
+          <span class="brand-note">德国1983年极简照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="slamp">
+        <a href="https://www.slamp.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=slamp.com&sz=128" alt="Slamp" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%2334495e%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ES%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Slamp</div>
+          <a href="https://www.slamp.com/" target="_blank" class="brand-link">www.slamp.com</a>
+          <span class="brand-note">意大利1994年手工聚合物灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="tecnolumen">
+        <a href="https://tecnolumen.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=tecnolumen.com&sz=128" alt="Tecnolumen" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e67e22%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ET%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Tecnolumen</div>
+          <a href="https://tecnolumen.com/" target="_blank" class="brand-link">tecnolumen.com</a>
+          <span class="brand-note">德国包豪斯原版灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="tomdixon">
+        <a href="https://www.tomdixon.net/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=tomdixon.net&sz=128" alt="Tom Dixon" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%233498db%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ET%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Tom Dixon</div>
+          <a href="https://www.tomdixon.net/" target="_blank" class="brand-link">www.tomdixon.net</a>
+          <span class="brand-note">英国2002年奢华设计品牌</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="verpan">
+        <a href="https://verpan.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=verpan.com&sz=128" alt="Verpan" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e74c3c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EV%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Verpan</div>
+          <a href="https://verpan.com/" target="_blank" class="brand-link">verpan.com</a>
+          <span class="brand-note">丹麦Verner Panton官方授权</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="wever">
+        <a href="https://www.weverducre.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=weverducre.com&sz=128" alt="Wever & Ducré" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232ecc71%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EW%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Wever & Ducré</div>
+          <a href="https://www.weverducre.com/" target="_blank" class="brand-link">www.weverducre.com</a>
+          <span class="brand-note">比利时1983年专业建筑照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="recommended" data-name="wastberg">
+        <a href="https://www.wastberg.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=wastberg.com&sz=128" alt="Wästberg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23f39c12%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EW%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Wästberg</div>
+          <a href="https://www.wastberg.com/" target="_blank" class="brand-link">www.wastberg.com</a>
+          <span class="brand-note">瑞典2008年健康照明</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📦 Other Brands（精选示例） -->
+    <h2 class="section-title other">📦 Other Brands（其他品牌 · 精选示例）</h2>
+    <div class="brands-grid" id="other-brands">
+      <div class="brand-card" data-category="other" data-name="anglepoise">
+        <a href="https://www.anglepoise.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=anglepoise.com&sz=128" alt="Anglepoise" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%239b59b6%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EA%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Anglepoise</div>
+          <a href="https://www.anglepoise.com/" target="_blank" class="brand-link">www.anglepoise.com</a>
+          <span class="brand-note">英国1932年经典弹簧臂灯</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="fontana">
+        <a href="https://www.fontanaarte.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=fontanaarte.com&sz=128" alt="FontanaArte" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%231abc9c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EF%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">FontanaArte</div>
+          <a href="https://www.fontanaarte.com/" target="_blank" class="brand-link">www.fontanaarte.com</a>
+          <span class="brand-note">意大利1932年经典照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="kartell">
+        <a href="https://www.kartell.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=kartell.com&sz=128" alt="Kartell" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%2334495e%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EK%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Kartell</div>
+          <a href="https://www.kartell.com/" target="_blank" class="brand-link">www.kartell.com</a>
+          <span class="brand-note">意大利1949年塑料设计经典</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="lzf">
+        <a href="https://www.lzf-lamps.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=lzf-lamps.com&sz=128" alt="LZF Lamps" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e67e22%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EL%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">LZF Lamps</div>
+          <a href="https://www.lzf-lamps.com/" target="_blank" class="brand-link">www.lzf-lamps.com</a>
+          <span class="brand-note">西班牙1994年手工木皮灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="terzani">
+        <a href="https://www.terzani.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=terzani.com&sz=128" alt="Terzani" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%233498db%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ET%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Terzani</div>
+          <a href="https://www.terzani.com/" target="_blank" class="brand-link">www.terzani.com</a>
+          <span class="brand-note">意大利1972年奢华手工灯具</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="umage">
+        <a href="https://umage.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=umage.com&sz=128" alt="UMAGE" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23e74c3c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EU%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">UMAGE</div>
+          <a href="https://umage.com/" target="_blank" class="brand-link">umage.com</a>
+          <span class="brand-note">丹麦可持续北欧设计</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="10heures">
+        <a href="https://10heures10.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=10heures10.com&sz=128" alt="10 HEURES 10" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%232ecc71%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3E1%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">10 HEURES 10</div>
+          <a href="https://10heures10.com/" target="_blank" class="brand-link">10heures10.com</a>
+          <span class="brand-note">法国巴黎新锐照明品牌</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="101cph">
+        <a href="https://101cph.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=101cph.com&sz=128" alt="101 Copenhagen" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%23f39c12%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3E1%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">101 Copenhagen</div>
+          <a href="https://101cph.com/" target="_blank" class="brand-link">101cph.com</a>
+          <span class="brand-note">丹麦现代家居照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="bega">
+        <a href="https://www.bega.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=bega.com&sz=128" alt="Bega" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%239b59b6%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3EB%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Bega</div>
+          <a href="https://www.bega.com/" target="_blank" class="brand-link">www.bega.com</a>
+          <span class="brand-note">德国专业户外建筑照明</span>
+        </div>
+      </div>
+      <div class="brand-card" data-category="other" data-name="delta">
+        <a href="https://www.deltalight.com/" target="_blank" class="brand-icon">
+          <img src="https://www.google.com/s2/favicons?domain=deltalight.com&sz=128" alt="Delta Light" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect fill=%22%231abc9c%22 width=%2250%22 height=%2250%22 rx=%228%22/%3E%3Ctext fill=%22white%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22%3ED%3C/text%3E%3C/svg%3E'">
+        </a>
+        <div class="brand-info">
+          <div class="brand-name">Delta Light</div>
+          <a href="https://www.deltalight.com/" target="_blank" class="brand-link">www.deltalight.com</a>
+          <span class="brand-note">比利时专业建筑照明</span>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>💡 Nostraforma 品牌导航页 · 更新于 2026年1月</p>
+      <p>⚠️ 链接可能随品牌策略调整，如遇失效请搜索"品牌名 + official website"</p>
+      <p>🔧 代码开源 · 可自由修改使用 · <a href="#" onclick="alert('右键 → 另存为 即可保存完整HTML文件')">保存本页</a></p>
+    </footer>
+  </div>
+
+  <script>
+    // 搜索功能
+    function filterBrands() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.brand-card');
+      
+      cards.forEach(card => {
+        const name = card.dataset.name;
+        const note = card.querySelector('.brand-note').textContent.toLowerCase();
+        const brandName = card.querySelector('.brand-name').textContent.toLowerCase();
+        
+        if (name.includes(input) || note.includes(input) || brandName.includes(input)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // 分类筛选
+    function filterCategory(category) {
+      // 更新按钮状态
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // 筛选卡片
+      const cards = document.querySelectorAll('.brand-card');
+      cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
